@@ -19,18 +19,34 @@ int main(int argc, char *argv[]) {
 	std::normal_distribution<double> dist(0.0, 1.0);
 
 
+	// The simulation is executed for an increasingly greater number of 
+	// steps (thus the step size becomes smaller).
+
 	for (unsigned int steps = 2; steps < 10000; steps = steps * 2) {
+		// METASAMPLES is the number of solutions used to estimate the
+		// high-level statistics
 		const int metasamples = 1000;
 
+		// SAMPLES is the number of samples used to estimate the solution
 		const unsigned int samples = 1000;
+
+		// T is the time to expiry
 		const double T = 1.0;
+
+		// X0 is the initial value of the asset
 		const double X0 = 100.0;
+
+		// R is the constant interest rate
 		const double r = 0.05;
+
+		// VOLATILITY is the constanrt volatility of the asset
 		const double volatility = 0.03;
 		
+		// Step size
 		double dt = T / static_cast<double>(steps);
 		double sqrtdt = sqrt(dt);
 
+		// DATAEM captures the individual samples within a simulation
 		auto dataEM = new double[samples];
 		auto metameanEM = new double[metasamples];
 		auto metastdevEM = new double[metasamples];

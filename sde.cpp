@@ -6,12 +6,33 @@
  * ----------  ------  ---------------
  * 2017-11-01  JJL     Initial version
  *
+ * See:
+ * 
+ * Lay, H., Colgin, Z., Reshniak, V., Khaliq, A.Q.M. (2018).
+ * "On the implementation of multilevel Monte Carlo simulation
+ * of the stochastic volatility and interest rate model using
+ * multi-GPU clusters." Monte Carlo Methods and Applications,
+ * 24(4), pp. 309-321.
+ * 
+ * Lay, Harold A. (2020). "Simulation of stochastic systems using 
+ * antithetic multilevel Monte Carlo on GPUs." Middle Tennessee
+ * State University. Ph.D. Dissertation.
+ * 
  */
 
+
+//
+// Standard Includes
+//
 
 #include <iostream>
 #include <iomanip>
 #include <random>
+
+
+//
+// Function: main()
+//
 
 int main(int argc, char *argv[]) {
 
@@ -25,10 +46,10 @@ int main(int argc, char *argv[]) {
 	for (unsigned int steps = 2; steps < 10000; steps = steps * 2) {
 		// METASAMPLES is the number of solutions used to estimate the
 		// high-level statistics
-		const int metasamples = 1000;
+		const int metasamples = 2000;
 
 		// SAMPLES is the number of samples used to estimate the solution
-		const unsigned int samples = 1000;
+		const unsigned int samples = 2000;
 
 		// T is the time to expiry
 		const double T = 1.0;
@@ -42,6 +63,9 @@ int main(int argc, char *argv[]) {
 		// VOLATILITY is the constanrt volatility of the asset
 		const double volatility = 0.03;
 		
+		// Analytical solution
+		const double analytical = X0 * exp(r * T);
+
 		// Step size
 		double dt = T / static_cast<double>(steps);
 		double sqrtdt = sqrt(dt);

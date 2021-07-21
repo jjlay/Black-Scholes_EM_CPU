@@ -1,4 +1,4 @@
-CC = g++
+CC = g++-10
 CFLAGS = -std=c++20 -g
 
 sde : sde.o

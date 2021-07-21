@@ -5,6 +5,7 @@
  * DATE        AUTHOR  COMMENTS
  * ----------  ------  ---------------
  * 2017-11-01  JJL     Initial version
+ * 2021-07-20  JJL     Added export of gnuplot chart
  *
  * See:
  * 
@@ -28,6 +29,7 @@
 #include <iostream>
 #include <iomanip>
 #include <random>
+#include <fstream>
 
 
 //
@@ -39,6 +41,16 @@ int main(int argc, char *argv[]) {
 	std::default_random_engine  gen;
 	std::normal_distribution<double> dist(0.0, 1.0);
 
+	std::ofstream csv;
+	csv.open("errors.csv", std::ios::out);
+
+	if (!csv.is_open()) {
+		std::cerr << "Unable to create the CSV file." << std::endl;
+		exit(-1);
+	}
+
+	csv << "dt, discretization, error" << std::endl;
+	csv.close();
 
 	// The simulation is executed for an increasingly greater number of 
 	// steps (thus the step size becomes smaller).
@@ -163,6 +175,12 @@ int main(int argc, char *argv[]) {
 			<< "MEAN :: mean: " << std::fixed << std::setw(8) << std::setprecision(7) << meanmean << " : stdev: " << meanstdev << " | "
 			<< "STD DEV :: mean: " << stdevmean << " : stdev: " << stdevstdev << std::endl;
 		
+		csv.open("errors.csv", std::ios::app);
+		double error = (meanmean < analytical ? analytical - meanmean : meanmean - analytical);
+		csv << dt << ", EM, " << std::setprecision(8) << error << std::endl;
+		csv.close();
+
+
 		//
 		// Milstein
 		//
@@ -194,6 +212,14 @@ int main(int argc, char *argv[]) {
             << " | "
 			<< "STD DEV :: mean: " << stdevmean 
             << " : stdev: " << stdevstdev << std::endl;
+
+		csv.open("errors.csv", std::ios::app);
+		error = (meanmean < analytical ? analytical - meanmean : meanmean - analytical);
+		csv << dt << ", Milstein, " << std::setprecision(8) << error << std::endl;
+		csv.close();
+
+
+
 	}
 		
 	return 0;
